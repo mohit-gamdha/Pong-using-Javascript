@@ -1,0 +1,83 @@
+<html>
+<canvas id="background" width="600" height="400"></canvas>
+<script>
+
+var canvas = document.getElementById("background");
+var ctx = canvas.getContext("2d");
+var ballX=300,ballY=200;
+var speedX=5,speedY=4;
+var p1=250;
+var p2=250;
+
+function moveComp(){
+	if(ballY > p2+45)
+	p2+=3;
+	else
+	p2-=3;
+}
+function mousePosition(evt){
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+
+	return {
+		x:mouseX,
+		y:mouseY
+	}
+}
+
+function ballReset(){
+	speedX=-speedX;	speedY=-speedY;
+	ballX=300;ballY=200;
+}
+setInterval(function(){move();draw();},20)
+canvas.addEventListener('mousemove',function(evt){
+		var mousePos = mousePosition(evt);
+		p1=mousePos.y-45;
+		});
+
+
+
+function move(){
+	moveComp();
+	ballX=ballX+speedX;
+	ballY=ballY+speedY;
+	
+	if(ballX<0)
+	{
+		if( ballY>p1 && ballY<p1+90)
+			speedX = -speedX;
+		else
+			ballReset();
+	}
+	if(ballX>canvas.width)
+	{
+		if(ballY>p2 && ballY<p2+90)
+			speedX = -speedX;
+		else
+			ballReset();
+	}
+	if(ballY>canvas.height)
+	speedY=-speedY;
+	if(ballY<0)
+	speedY=-speedY;
+}
+function draw(){
+ctx.fillStyle="#FF0000";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle='black';
+ctx.fillRect(0,p1,10,90);
+
+ctx.fillStyle='black';
+ctx.fillRect(canvas.width-10,p2,10,90);
+
+ctx.fillStyle='black';
+ctx.beginPath();
+ctx.arc(ballX,ballY,10,0,Math.PI*2,true);
+ctx.fill();
+}
+
+</script>
+</html>
